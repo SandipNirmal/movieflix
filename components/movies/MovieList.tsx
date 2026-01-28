@@ -29,7 +29,7 @@ export function MovieList({ title, movies, isLoading, onEndReached, hasNextPage 
         }}>
         {title}
       </Text>
-      <View style={{ height: 240 }}>
+      <View style={{ height: 260 }}>
         <FlatList
           data={movies}
           keyExtractor={(item) => item.id.toString()}
@@ -39,9 +39,10 @@ export function MovieList({ title, movies, isLoading, onEndReached, hasNextPage 
           contentContainerStyle={{ paddingHorizontal: Spacing.three }}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.5}
+          estimatedItemSize={148}
           ListFooterComponent={
             hasNextPage ? (
-              <View style={{ width: 80, alignItems: 'center', justifyContent: 'center' }}>
+              <View style={{ width: 80, height: 260, alignItems: 'center', justifyContent: 'center' }}>
                 <ActivityIndicator color={colors.primary} />
               </View>
             ) : null
@@ -50,8 +51,8 @@ export function MovieList({ title, movies, isLoading, onEndReached, hasNextPage 
             isLoading ? (
               <View
                 style={{
-                  height: 210,
-                  width: '100%',
+                  height: 260,
+                  width: 200,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>

@@ -53,11 +53,30 @@ export function HeroSection({ movie }: HeroSectionProps) {
           height: '60%',
         }}
       />
-      <View style={{ position: 'absolute', bottom: 32, left: 16, right: 16 }}>
-        <Text style={{ color: 'white', fontSize: 28, fontWeight: 'bold', marginBottom: 8 }} numberOfLines={2}>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 24,
+          left: 16,
+          right: 16,
+        }}>
+        <Text
+          style={{
+            color: colors.text,
+            fontSize: 26,
+            fontWeight: 'bold',
+            marginBottom: 8,
+          }}
+          numberOfLines={2}>
           {movie.title}
         </Text>
-        <Text style={{ color: '#d4d4d4', fontSize: 14, marginBottom: 16 }} numberOfLines={3}>
+        <Text
+          style={{
+            color: colors.textSecondary,
+            fontSize: 14,
+            marginBottom: 12,
+          }}
+          numberOfLines={2}>
           {movie.overview}
         </Text>
         <View style={{ flexDirection: 'row', gap: 12 }}>

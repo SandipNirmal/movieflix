@@ -17,8 +17,6 @@ export default function SearchScreen() {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSearchMovies(debouncedQuery);
 
-  console.log('data', { isLoading, data });
-
   const movies = data?.pages.flatMap((page) => page.results) ?? [];
 
   const renderFooter = useCallback(() => {

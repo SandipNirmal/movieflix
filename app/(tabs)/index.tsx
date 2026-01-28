@@ -5,18 +5,24 @@ import {
   useTopRatedMovies,
 } from '@/lib/api';
 import { MovieList, HeroSection } from '@/components/movies';
-import { ScrollView, View, RefreshControl, useColorScheme, ActivityIndicator } from 'react-native';
+import { ScrollView, View, RefreshControl, useColorScheme, ActivityIndicator, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Spacing } from '@/constants/theme';
 import { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { Uniwind, useUniwind } from 'uniwind';
+import { SunIcon, MoonIcon } from 'lucide-react-native';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
+  const { theme } = useUniwind();
+  const colors = Colors[theme === 'dark' ? 'dark' : 'light'];
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
+
+  const toggleTheme = () => {
+    Uniwind.setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
   const trending = useTrendingMovies('week');
   const popular = usePopularMovies();
@@ -52,17 +58,37 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ paddingBottom: insets.bottom + Spacing.six }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
-      }>
-      {heroMovie ? (
-        <HeroSection movie={heroMovie} />
-      ) : (
-        <View style={{ height: insets.top + 200, backgroundColor: colors.background }} />
-      )}
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      {/* Theme Toggle Button */}
+      <Pressable
+        onPress={toggleTheme}
+        style={{
+          position: 'absolute',
+          top: insets.top + Spacing.two,
+          right: Spacing.three,
+          zIndex: 100,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          borderRadius: 20,
+          padding: Spacing.two,
+        }}>
+        {theme === 'dark' ? (
+          <SunIcon size={22} color="white" />
+        ) : (
+          <MoonIcon size={22} color="white" />
+        )}
+      </Pressable>
+
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: insets.bottom + Spacing.six }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
+        }>
+        {heroMovie ? (
+          <HeroSection movie={heroMovie} />
+        ) : (
+          <View style={{ height: insets.top + 200, backgroundColor: colors.background }} />
+        )}
 
       <View style={{ marginTop: Spacing.three }}>
         <MovieList
@@ -97,6 +123,7 @@ export default function HomeScreen() {
           hasNextPage={topRated.hasNextPage}
         />
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
