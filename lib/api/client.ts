@@ -22,11 +22,17 @@ export async function fetchFromTMDB<T>(
     url.searchParams.set(key, String(value));
   });
 
-  const response = await fetch(url.toString());
+  try {
+    const response = await fetch(url.toString());
 
-  if (!response.ok) {
-    throw new ApiError(response.status, `API Error: ${response.statusText}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new ApiError(response.status, `API Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
   }
-
-  return response.json();
 }

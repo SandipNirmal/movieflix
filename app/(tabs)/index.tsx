@@ -1,8 +1,13 @@
-import { useTrendingMovies, usePopularMovies, useNowPlayingMovies, useTopRatedMovies } from '@/lib/api';
+import {
+  useTrendingMovies,
+  usePopularMovies,
+  useNowPlayingMovies,
+  useTopRatedMovies,
+} from '@/lib/api';
 import { MovieList, HeroSection } from '@/components/movies';
-import { ScrollView, View, RefreshControl, useColorScheme } from 'react-native';
+import { ScrollView, View, RefreshControl, useColorScheme, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, BottomTabInset, Spacing } from '@/constants/theme';
+import { Colors, Spacing } from '@/constants/theme';
 import { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -30,16 +35,34 @@ export default function HomeScreen() {
   }, [queryClient]);
 
   const heroMovie = trendingMovies[0];
+  const isLoading = trending.isLoading;
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ paddingBottom: BottomTabInset + Spacing.six }}
+      contentContainerStyle={{ paddingBottom: insets.bottom + Spacing.six }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
-      }
-    >
-      {heroMovie && <HeroSection movie={heroMovie} />}
+      }>
+      {heroMovie ? (
+        <HeroSection movie={heroMovie} />
+      ) : (
+        <View style={{ height: insets.top + 200, backgroundColor: colors.background }} />
+      )}
 
       <View style={{ marginTop: Spacing.three }}>
         <MovieList

@@ -17,6 +17,8 @@ export default function SearchScreen() {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSearchMovies(debouncedQuery);
 
+  console.log('data', { isLoading, data });
+
   const movies = data?.pages.flatMap((page) => page.results) ?? [];
 
   const renderFooter = useCallback(() => {
@@ -34,8 +36,7 @@ export default function SearchScreen() {
         flex: 1,
         backgroundColor: colors.background,
         paddingTop: insets.top,
-      }}
-    >
+      }}>
       <View style={{ paddingHorizontal: Spacing.three, paddingVertical: Spacing.two }}>
         <TextInput
           value={query}

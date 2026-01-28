@@ -3,6 +3,7 @@ import type { Movie } from '@/lib/api';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { View, Dimensions, useColorScheme } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
@@ -16,12 +17,13 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ movie }: HeroSectionProps) {
+  const insets = useSafeAreaInsets();
   const scheme = useColorScheme();
   const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
   const imageUrl = getImageUrl(movie.backdrop_path, IMAGE_SIZES.backdrop.large);
 
   return (
-    <View style={{ height: width * 1.2, position: 'relative' }}>
+    <View style={{ height: width * 1.2 + insets.top, position: 'relative' }}>
       {imageUrl && (
         <Image
           source={{ uri: imageUrl }}
@@ -29,6 +31,18 @@ export function HeroSection({ movie }: HeroSectionProps) {
           contentFit="cover"
         />
       )}
+      {/* Top gradient for status bar visibility */}
+      <LinearGradient
+        colors={['rgba(0,0,0,0.5)', 'transparent']}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: insets.top + 60,
+        }}
+      />
+      {/* Bottom gradient */}
       <LinearGradient
         colors={['transparent', `${colors.background}CC`, colors.background]}
         style={{

@@ -6,12 +6,14 @@ import { PortalHost } from '@rn-primitives/portal';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5,
       gcTime: 1000 * 60 * 30,
+      experimental_prefetchInRender: true,
     },
   },
 });
@@ -23,15 +25,17 @@ export default function RootLayout() {
   const isDark = colorScheme === 'dark';
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-        <StatusBar style={isDark ? 'light' : 'dark'} />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="movie/[id]" options={{ presentation: 'card' }} />
-        </Stack>
-        <PortalHost />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
+          <StatusBar style={isDark ? 'light' : 'dark'} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="movie/[id]" options={{ presentation: 'card' }} />
+          </Stack>
+          <PortalHost />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }
