@@ -64,7 +64,7 @@ export function MovieCard({ movie, size = 'medium' }: MovieCardProps) {
             {movie.title}
           </Text>
           <Text style={{ color: colors.textSecondary, fontSize: 11 }}>
-            {movie.vote_average.toFixed(1)} ★
+            {movie?.vote_average?.toFixed(1) || 'NA'} ★
           </Text>
         </View>
       </Pressable>

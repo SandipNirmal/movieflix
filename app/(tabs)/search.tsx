@@ -34,8 +34,9 @@ export default function SearchScreen() {
         flex: 1,
         backgroundColor: colors.background,
         paddingTop: insets.top,
+        paddingHorizontal: Spacing.three,
       }}>
-      <View style={{ paddingHorizontal: Spacing.three, paddingVertical: Spacing.two }}>
+      <View style={{ paddingVertical: Spacing.four }}>
         <TextInput
           value={query}
           onChangeText={setQuery}
@@ -73,7 +74,11 @@ export default function SearchScreen() {
             paddingHorizontal: Spacing.two,
             paddingBottom: BottomTabInset + Spacing.six,
           }}
-          columnWrapperStyle={{ gap: Spacing.two, marginBottom: Spacing.three }}
+          columnWrapperStyle={{
+            gap: Spacing.two,
+            marginBottom: Spacing.three,
+            justifyContent: 'space-between',
+          }}
           renderItem={({ item }) => <MovieCard movie={item} size="small" />}
           onEndReached={() => hasNextPage && fetchNextPage()}
           onEndReachedThreshold={0.5}
