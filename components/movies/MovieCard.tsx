@@ -6,15 +6,6 @@ import { Pressable, View, useColorScheme } from 'react-native';
 import { Text } from '@/components/ui/text';
 import { Colors, Spacing } from '@/constants/theme';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-
 interface MovieCardProps {
   movie: Movie;
   size?: 'small' | 'medium' | 'large';
@@ -69,22 +60,5 @@ export function MovieCard({ movie, size = 'medium' }: MovieCardProps) {
         </View>
       </Pressable>
     </Link>
-  );
-}
-
-export function MovieCardNew({ movie }: MovieCardProps) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{movie.title}</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Text>Card Content</Text>
-      </CardContent>
-      <CardFooter>
-        <Text>Card Footer</Text>
-      </CardFooter>
-    </Card>
   );
 }

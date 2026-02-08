@@ -1,5 +1,12 @@
 import { useLocalSearchParams, Stack, router } from 'expo-router';
-import { useMovieDetails, useMovieCredits, useSimilarMovies, getImageUrl, IMAGE_SIZES } from '@/lib/api';
+import {
+  useMovieDetails,
+  useMovieCredits,
+  useSimilarMovies,
+  getImageUrl,
+  // useMovieVideos,
+  IMAGE_SIZES,
+} from '@/lib/api';
 import { MovieCard } from '@/components/movies';
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
@@ -30,10 +37,17 @@ export default function MovieDetailScreen() {
   const { data: movie, isLoading } = useMovieDetails(movieId);
   const { data: credits } = useMovieCredits(movieId);
   const { data: similar } = useSimilarMovies(movieId);
+  // const { data: videos } = useMovieVideos(movieId);
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         <ActivityIndicator color={colors.primary} size="large" />
       </View>
     );
@@ -41,7 +55,13 @@ export default function MovieDetailScreen() {
 
   if (!movie) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         <Text style={{ color: colors.text }}>Movie not found</Text>
       </View>
     );
@@ -87,8 +107,7 @@ export default function MovieDetailScreen() {
               backgroundColor: 'rgba(0,0,0,0.5)',
               borderRadius: 20,
               padding: Spacing.two,
-            }}
-          >
+            }}>
             <ArrowLeftIcon size={24} color="white" />
           </Pressable>
         </View>
@@ -97,7 +116,8 @@ export default function MovieDetailScreen() {
         <View style={{ paddingHorizontal: Spacing.three, marginTop: -Spacing.six }}>
           <View style={{ flexDirection: 'row', gap: Spacing.three }}>
             {/* Poster */}
-            <View style={{ width: 120, height: 180, borderRadius: Spacing.two, overflow: 'hidden' }}>
+            <View
+              style={{ width: 120, height: 180, borderRadius: Spacing.two, overflow: 'hidden' }}>
               {posterUrl && (
                 <Image
                   source={{ uri: posterUrl }}
@@ -109,11 +129,19 @@ export default function MovieDetailScreen() {
 
             {/* Info */}
             <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-              <Text style={{ color: colors.text, fontSize: 22, fontWeight: 'bold' }} numberOfLines={2}>
+              <Text
+                style={{ color: colors.text, fontSize: 22, fontWeight: 'bold' }}
+                numberOfLines={2}>
                 {movie.title}
               </Text>
 
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two, marginTop: Spacing.one }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  gap: Spacing.two,
+                  marginTop: Spacing.one,
+                }}>
                 {movie.release_date && (
                   <Text style={{ color: colors.textSecondary, fontSize: 14 }}>
                     {new Date(movie.release_date).getFullYear()}
@@ -129,7 +157,13 @@ export default function MovieDetailScreen() {
                 )}
               </View>
 
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: Spacing.one }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 4,
+                  marginTop: Spacing.one,
+                }}>
                 <StarIcon size={16} color="#FFD700" />
                 <Text style={{ color: colors.text, fontSize: 14, fontWeight: '600' }}>
                   {movie.vote_average.toFixed(1)}
@@ -142,7 +176,13 @@ export default function MovieDetailScreen() {
           </View>
 
           {/* Genres */}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two, marginTop: Spacing.three }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: Spacing.two,
+              marginTop: Spacing.three,
+            }}>
             {movie.genres.map((genre) => (
               <View
                 key={genre.id}
@@ -151,8 +191,7 @@ export default function MovieDetailScreen() {
                   paddingHorizontal: Spacing.two + Spacing.one,
                   paddingVertical: Spacing.one,
                   borderRadius: Spacing.two,
-                }}
-              >
+                }}>
                 <Text style={{ color: colors.text, fontSize: 12 }}>{genre.name}</Text>
               </View>
             ))}
@@ -172,7 +211,13 @@ export default function MovieDetailScreen() {
           {/* Overview */}
           {movie.overview && (
             <View style={{ marginTop: Spacing.four }}>
-              <Text style={{ color: colors.text, fontSize: 16, fontWeight: '600', marginBottom: Spacing.two }}>
+              <Text
+                style={{
+                  color: colors.text,
+                  fontSize: 16,
+                  fontWeight: '600',
+                  marginBottom: Spacing.two,
+                }}>
                 Overview
               </Text>
               <Text style={{ color: colors.textSecondary, lineHeight: 22 }}>{movie.overview}</Text>
@@ -191,7 +236,13 @@ export default function MovieDetailScreen() {
           {/* Cast */}
           {cast.length > 0 && (
             <View style={{ marginTop: Spacing.four }}>
-              <Text style={{ color: colors.text, fontSize: 16, fontWeight: '600', marginBottom: Spacing.two }}>
+              <Text
+                style={{
+                  color: colors.text,
+                  fontSize: 16,
+                  fontWeight: '600',
+                  marginBottom: Spacing.two,
+                }}>
                 Cast
               </Text>
               <FlatList
@@ -200,35 +251,47 @@ export default function MovieDetailScreen() {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <View style={{ marginRight: Spacing.three, alignItems: 'center', width: 80 }}>
-                    <View
-                      style={{
-                        width: 70,
-                        height: 70,
-                        borderRadius: 35,
-                        overflow: 'hidden',
-                        backgroundColor: colors.backgroundElement,
-                      }}
-                    >
-                      {item.profile_path ? (
-                        <Image
-                          source={{ uri: getImageUrl(item.profile_path, IMAGE_SIZES.profile.medium)! }}
-                          style={{ width: '100%', height: '100%' }}
-                          contentFit="cover"
-                        />
-                      ) : (
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                          <Text style={{ color: colors.textSecondary }}>?</Text>
-                        </View>
-                      )}
+                  <Pressable onPress={() => router.push(`/cast/${item.id}`)}>
+                    <View style={{ marginRight: Spacing.three, alignItems: 'center', width: 80 }}>
+                      <View
+                        style={{
+                          width: 70,
+                          height: 70,
+                          borderRadius: 35,
+                          overflow: 'hidden',
+                          backgroundColor: colors.backgroundElement,
+                        }}>
+                        {item.profile_path ? (
+                          <Image
+                            source={{
+                              uri: getImageUrl(item.profile_path, IMAGE_SIZES.profile.medium)!,
+                            }}
+                            style={{ width: '100%', height: '100%' }}
+                            contentFit="cover"
+                          />
+                        ) : (
+                          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <Text style={{ color: colors.textSecondary }}>?</Text>
+                          </View>
+                        )}
+                      </View>
+                      <Text
+                        style={{
+                          color: colors.text,
+                          fontSize: 12,
+                          marginTop: 4,
+                          textAlign: 'center',
+                        }}
+                        numberOfLines={1}>
+                        {item.name}
+                      </Text>
+                      <Text
+                        style={{ color: colors.textSecondary, fontSize: 10, textAlign: 'center' }}
+                        numberOfLines={1}>
+                        {item.character}
+                      </Text>
                     </View>
-                    <Text style={{ color: colors.text, fontSize: 12, marginTop: 4, textAlign: 'center' }} numberOfLines={1}>
-                      {item.name}
-                    </Text>
-                    <Text style={{ color: colors.textSecondary, fontSize: 10, textAlign: 'center' }} numberOfLines={1}>
-                      {item.character}
-                    </Text>
-                  </View>
+                  </Pressable>
                 )}
               />
             </View>
@@ -237,7 +300,13 @@ export default function MovieDetailScreen() {
           {/* Similar Movies */}
           {similarMovies.length > 0 && (
             <View style={{ marginTop: Spacing.four, marginBottom: Spacing.six }}>
-              <Text style={{ color: colors.text, fontSize: 16, fontWeight: '600', marginBottom: Spacing.two }}>
+              <Text
+                style={{
+                  color: colors.text,
+                  fontSize: 16,
+                  fontWeight: '600',
+                  marginBottom: Spacing.two,
+                }}>
                 Similar Movies
               </Text>
               <FlatList

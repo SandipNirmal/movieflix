@@ -1,12 +1,6 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { fetchFromTMDB } from './client';
-import type {
-  Movie,
-  MovieDetails,
-  Credits,
-  Video,
-  PaginatedResponse,
-} from './types';
+import type { Movie, MovieDetails, Credits, Video, PaginatedResponse } from './types';
 
 // Query Keys
 export const movieKeys = {
@@ -106,10 +100,7 @@ export function useMovieCredits(movieId: number) {
 export function useMovieVideos(movieId: number) {
   return useQuery({
     queryKey: movieKeys.videos(movieId),
-    queryFn: () =>
-      fetchFromTMDB<{ id: number; results: Video[] }>(
-        `/movie/${movieId}/videos`
-      ),
+    queryFn: () => fetchFromTMDB<{ id: number; results: Video[] }>(`/movie/${movieId}/videos`),
     enabled: !!movieId,
   });
 }
@@ -117,8 +108,7 @@ export function useMovieVideos(movieId: number) {
 export function useSimilarMovies(movieId: number) {
   return useQuery({
     queryKey: movieKeys.similar(movieId),
-    queryFn: () =>
-      fetchFromTMDB<PaginatedResponse<Movie>>(`/movie/${movieId}/similar`),
+    queryFn: () => fetchFromTMDB<PaginatedResponse<Movie>>(`/movie/${movieId}/similar`),
     enabled: !!movieId,
   });
 }

@@ -92,6 +92,36 @@ export interface Video {
   official: boolean;
 }
 
+export interface PersonDetail {
+  id: number;
+  name: string;
+  biography: string;
+  birthday: string | null;
+  deathday: string | null;
+  gender: number;
+  homepage: string | null;
+  imdb_id: string;
+  known_for_department: string;
+  place_of_birth: string | null;
+  popularity: number;
+  profile_path: string | null;
+  also_known_as: string[];
+}
+
+export interface PersonMovieCredit {
+  id: number;
+  title: string;
+  character: string;
+  poster_path: string | null;
+  release_date: string;
+  vote_average: number;
+}
+
+export interface PersonCredits {
+  id: number;
+  cast: PersonMovieCredit[];
+}
+
 export interface PaginatedResponse<T> {
   page: number;
   results: T[];
