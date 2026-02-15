@@ -7,6 +7,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import OfflineScreen, { useIsOffline } from './_offline';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,16 +24,21 @@ export { ErrorBoundary } from 'expo-router';
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const isOffline = useIsOffline();
 
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
           <StatusBar style={isDark ? 'light' : 'dark'} />
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="movie/[id]" options={{ presentation: 'card' }} />
-          </Stack>
+          {isOffline ? (
+            <OfflineScreen />
+          ) : (
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="movie/[id]" options={{ presentation: 'card' }} />
+            </Stack>
+          )}
           <PortalHost />
         </ThemeProvider>
       </QueryClientProvider>

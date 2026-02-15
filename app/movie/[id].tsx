@@ -81,7 +81,6 @@ export default function MovieDetailScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ headerShown: false }} />
       <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
         {/* Backdrop */}
         <View style={{ height: width * 0.8, position: 'relative' }}>
