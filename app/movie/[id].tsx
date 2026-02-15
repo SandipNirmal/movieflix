@@ -1,4 +1,4 @@
-import { useLocalSearchParams, Stack, router } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import {
   useMovieDetails,
   useMovieCredits,
@@ -25,6 +25,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeftIcon, PlayIcon, HeartIcon, StarIcon, ClockIcon } from 'lucide-react-native';
 import { Colors, Spacing } from '@/constants/theme';
 
+import { useFavouriteMovies } from '../../hooks/index';
+
 const { width } = Dimensions.get('window');
 
 export default function MovieDetailScreen() {
@@ -38,6 +40,9 @@ export default function MovieDetailScreen() {
   const { data: credits } = useMovieCredits(movieId);
   const { data: similar } = useSimilarMovies(movieId);
   // const { data: videos } = useMovieVideos(movieId);
+
+  const { addMovieToFavourite, removeMovieFromFavourite, getFavouriteMovies } =
+    useFavouriteMovies();
 
   if (isLoading) {
     return (
@@ -72,6 +77,8 @@ export default function MovieDetailScreen() {
   const director = credits?.crew.find((c) => c.job === 'Director');
   const cast = credits?.cast.slice(0, 10) ?? [];
   const similarMovies = similar?.results.slice(0, 10) ?? [];
+  const favoriteMovies = getFavouriteMovies();
+  const isFavourite = favoriteMovies[movieId];
 
   const formatRuntime = (minutes: number) => {
     const hrs = Math.floor(minutes / 60);
@@ -202,8 +209,19 @@ export default function MovieDetailScreen() {
               <PlayIcon size={20} color="white" />
               <Text style={{ color: 'white', fontWeight: '600' }}>Play</Text>
             </Button>
-            <Button variant="outline" style={{ backgroundColor: colors.backgroundElement }}>
-              <HeartIcon size={20} color={colors.text} />
+            <Button
+              variant="outline"
+              style={{ backgroundColor: colors.backgroundElement }}
+              onPress={() =>
+                isFavourite
+                  ? removeMovieFromFavourite(movieId)
+                  : addMovieToFavourite(movieId, movie)
+              }>
+              <HeartIcon
+                fill={isFavourite ? 'red' : 'none'}
+                color={isFavourite ? 'red' : 'gray'}
+                size={20}
+              />
             </Button>
           </View>
 
