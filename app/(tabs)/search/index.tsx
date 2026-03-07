@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { View, FlatList, useColorScheme, ActivityIndicator, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 import { useSearchMovies } from '@/lib/api';
 import { MovieCard } from '@/components/movies';
@@ -8,6 +9,7 @@ import { Colors, BottomTabInset, Spacing } from '@/constants/theme';
 import { useDebouncedValue } from '@/hooks';
 
 export default function SearchScreen() {
+  const insets = useSafeAreaInsets();
   const scheme = useColorScheme();
   const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
   const [query, setQuery] = useState('');
@@ -57,25 +59,33 @@ export default function SearchScreen() {
             <Text style={{ color: colors.textSecondary }}>Search for your favorite movies</Text>
           </ScrollView>
         ) : (
-          <FlatList
-            data={movies}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={3}
-            contentInsetAdjustmentBehavior="automatic"
-            contentContainerStyle={{
+          <View
+            style={{
+              flex: 1,
+              paddingTop: insets.top + Spacing.three,
               paddingHorizontal: Spacing.two,
-              paddingBottom: BottomTabInset + Spacing.six,
-            }}
-            columnWrapperStyle={{
-              gap: Spacing.two,
-              marginBottom: Spacing.three,
-              justifyContent: 'space-between',
-            }}
-            renderItem={({ item }) => <MovieCard movie={item} size="small" />}
-            onEndReached={() => hasNextPage && fetchNextPage()}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={renderFooter}
-          />
+            }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: colors.text, marginBottom: Spacing.three }}>
+              {debouncedQuery}
+            </Text>
+            <FlatList
+              data={movies}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={3}
+              contentInsetAdjustmentBehavior="automatic"
+              contentContainerStyle={{
+                paddingBottom: BottomTabInset + Spacing.six,
+              }}
+              columnWrapperStyle={{
+                gap: Spacing.two,
+                marginBottom: Spacing.three,
+              }}
+              renderItem={({ item }) => <MovieCard movie={item} size="small" />}
+              onEndReached={() => hasNextPage && fetchNextPage()}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={renderFooter}
+            />
+          </View>
         )}
       </View>
     </>

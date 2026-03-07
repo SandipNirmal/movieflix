@@ -12,6 +12,7 @@ import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect, useState } from 'react';
 import {
   ScrollView,
   View,
@@ -41,8 +42,12 @@ export default function MovieDetailScreen() {
   const { data: similar } = useSimilarMovies(movieId);
   // const { data: videos } = useMovieVideos(movieId);
 
-  const { addMovieToFavourite, removeMovieFromFavourite, getFavouriteMovies } =
-    useFavouriteMovies();
+  const { addMovieToFavourite, removeMovieFromFavourite, isFavouriteMovie } = useFavouriteMovies();
+  const [isFavourite, setIsFavourite] = useState(false);
+
+  useEffect(() => {
+    isFavouriteMovie(movieId).then(setIsFavourite);
+  }, [movieId, isFavouriteMovie]);
 
   if (isLoading) {
     return (
@@ -77,8 +82,6 @@ export default function MovieDetailScreen() {
   const director = credits?.crew.find((c) => c.job === 'Director');
   const cast = credits?.cast.slice(0, 10) ?? [];
   const similarMovies = similar?.results.slice(0, 10) ?? [];
-  const favoriteMovies = getFavouriteMovies();
-  const isFavourite = favoriteMovies[movieId];
 
   const formatRuntime = (minutes: number) => {
     const hrs = Math.floor(minutes / 60);
@@ -212,11 +215,15 @@ export default function MovieDetailScreen() {
             <Button
               variant="outline"
               style={{ backgroundColor: colors.backgroundElement }}
-              onPress={() =>
-                isFavourite
-                  ? removeMovieFromFavourite(movieId)
-                  : addMovieToFavourite(movieId, movie)
-              }>
+              onPress={async () => {
+                if (isFavourite) {
+                  await removeMovieFromFavourite(movieId);
+                  setIsFavourite(false);
+                } else {
+                  await addMovieToFavourite(movieId, movie);
+                  setIsFavourite(true);
+                }
+              }}>
               <HeartIcon
                 fill={isFavourite ? 'red' : 'none'}
                 color={isFavourite ? 'red' : 'gray'}

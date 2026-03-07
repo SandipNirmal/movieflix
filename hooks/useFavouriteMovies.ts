@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import {
   addMovieToFavourite as addMovie,
@@ -7,16 +7,12 @@ import {
 } from '../lib/storage';
 
 export const useFavouriteMovies = () => {
-  const [favourites, setFavourites] = useState<Record<string, any>>({});
+  const [favourites, setFavourites] = useState<any[]>([]);
 
   const loadFavourites = useCallback(async () => {
     const movies = await getMovies();
-    setFavourites(movies);
+    setFavourites(Object.values(movies));
   }, []);
-
-  useEffect(() => {
-    loadFavourites();
-  }, [loadFavourites]);
 
   const addMovieToFavourite = async (movieId: number, movie: any) => {
     await addMovie(movieId, movie);
@@ -32,9 +28,16 @@ export const useFavouriteMovies = () => {
     return favourites;
   };
 
+  const isFavouriteMovie = async (movieId: number): Promise<boolean> => {
+    const movies = await getMovies();
+    return !!movies[movieId];
+  };
+
   return {
     addMovieToFavourite,
     removeMovieFromFavourite,
     getFavouriteMovies,
+    loadFavourites,
+    isFavouriteMovie,
   };
 };

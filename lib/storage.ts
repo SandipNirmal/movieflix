@@ -25,3 +25,7 @@ export async function removeMovieFromFavourite(movieId: number) {
   delete movies[movieId];
   await AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(movies));
 }
+
+export async function deleteAllFavouriteMovies() {
+  await AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify({}));
+}
