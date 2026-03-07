@@ -65,7 +65,13 @@ export default function SearchScreen() {
               paddingTop: insets.top + Spacing.three,
               paddingHorizontal: Spacing.two,
             }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: colors.text, marginBottom: Spacing.three }}>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: 'bold',
+                color: colors.text,
+                marginBottom: Spacing.three,
+              }}>
               {debouncedQuery}
             </Text>
             <FlatList
@@ -79,6 +85,7 @@ export default function SearchScreen() {
               columnWrapperStyle={{
                 gap: Spacing.two,
                 marginBottom: Spacing.three,
+                justifyContent: movies.length > 2 ? 'space-between' : 'flex-start',
               }}
               renderItem={({ item }) => <MovieCard movie={item} size="small" />}
               onEndReached={() => hasNextPage && fetchNextPage()}

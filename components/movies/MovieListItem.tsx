@@ -38,6 +38,7 @@ export function MovieListItem({ movie }: { movie: Movie }) {
             shadowOpacity: 0.1,
             shadowRadius: 2,
             elevation: 2,
+            marginVertical: 2,
           }}>
           {/* Thumbnail Container */}
           <View
@@ -62,8 +63,13 @@ export function MovieListItem({ movie }: { movie: Movie }) {
             )}
           </View>
 
-          {/* Text Content */}
-          <View style={{ flex: 1, marginLeft: 12, justifyContent: 'center' }}>
+          <View
+            style={{
+              display: 'flex',
+              flex: 1,
+              marginLeft: Spacing.three,
+              justifyContent: 'center',
+            }}>
             <Text
               style={{
                 color: colors.text,

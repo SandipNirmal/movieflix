@@ -3,8 +3,8 @@ import {
   useMovieDetails,
   useMovieCredits,
   useSimilarMovies,
+  useMovieVideos,
   getImageUrl,
-  // useMovieVideos,
   IMAGE_SIZES,
 } from '@/lib/api';
 import { MovieCard } from '@/components/movies';
@@ -21,10 +21,12 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
+  Modal,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeftIcon, PlayIcon, HeartIcon, StarIcon, ClockIcon } from 'lucide-react-native';
+import { ArrowLeftIcon, PlayIcon, HeartIcon, StarIcon, ClockIcon, XIcon } from 'lucide-react-native';
 import { Colors, Spacing } from '@/constants/theme';
+import YoutubeIframe from 'react-native-youtube-iframe';
 
 import { useFavouriteMovies } from '../../hooks/index';
 
@@ -40,7 +42,14 @@ export default function MovieDetailScreen() {
   const { data: movie, isLoading } = useMovieDetails(movieId);
   const { data: credits } = useMovieCredits(movieId);
   const { data: similar } = useSimilarMovies(movieId);
-  // const { data: videos } = useMovieVideos(movieId);
+  const { data: videos } = useMovieVideos(movieId);
+
+  const trailer =
+    videos?.results?.find((v) => v.site === 'YouTube' && v.type === 'Trailer') ??
+    videos?.results?.find((v) => v.site === 'YouTube' && v.type === 'Teaser');
+  const trailerKey = trailer?.key ?? null;
+
+  const [trailerVisible, setTrailerVisible] = useState(false);
 
   const { addMovieToFavourite, removeMovieFromFavourite, isFavouriteMovie } = useFavouriteMovies();
   const [isFavourite, setIsFavourite] = useState(false);
@@ -208,7 +217,15 @@ export default function MovieDetailScreen() {
 
           {/* Actions */}
           <View style={{ flexDirection: 'row', gap: Spacing.two, marginTop: Spacing.three }}>
-            <Button style={{ flex: 1, backgroundColor: colors.primary }}>
+            <Button
+              style={{ flex: 1, backgroundColor: colors.primary }}
+              onPress={() => {
+                if (trailerKey) {
+                  setTrailerVisible(true);
+                } else {
+                  alert('No trailer available for this movie');
+                }
+              }}>
               <PlayIcon size={20} color="white" />
               <Text style={{ color: 'white', fontWeight: '600' }}>Play</Text>
             </Button>
@@ -344,6 +361,41 @@ export default function MovieDetailScreen() {
           )}
         </View>
       </ScrollView>
+
+      <Modal
+        visible={trailerVisible}
+        animationType="slide"
+        onRequestClose={() => setTrailerVisible(false)}>
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              paddingTop: insets.top + Spacing.two,
+              paddingHorizontal: Spacing.three,
+              paddingBottom: Spacing.two,
+            }}>
+            <Pressable
+              onPress={() => setTrailerVisible(false)}
+              style={{
+                backgroundColor: colors.backgroundElement,
+                borderRadius: 20,
+                padding: Spacing.two,
+              }}>
+              <XIcon size={24} color={colors.text} />
+            </Pressable>
+          </View>
+          <View style={{ flex: 1, paddingHorizontal: Spacing.three }}>
+            {trailerKey && (
+              <YoutubeIframe
+                height={width * 0.6}
+                videoId={trailerKey}
+                play={trailerVisible}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }
